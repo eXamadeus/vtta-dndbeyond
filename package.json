@@ -12,5 +12,9 @@
   },
   "dependencies": {
     "typescript": "^3.8.3"
+  },
+  "volta": {
+    "node": "18.13.0",
+    "npm": "9.3.1"
   }
 }
