@@ -8,6 +8,11 @@
   "author": "Sebastian Will",
   "authors": [
     {
+      "name": "Julian Coy",
+      "email": "julian@coy.cloud",
+      "url": "https://juliancoy.com"
+    },
+    {
       "name": "Sebastian Will",
       "email": "vttassets@gmail.com",
       "url": "https://www.vttassets.com"
@@ -45,6 +50,6 @@
   "packs": [],
   "socket": true,
   "url": "https://github.com/VTTAssets/vtta-dndbeyond",
-  "manifest": "https://raw.githubusercontent.com/VTTAssets/vtta-dndbeyond/master/module.json",
-  "download": "https://codeload.github.com/VTTAssets/vtta-dndbeyond/zip/3.3.5"
+  "manifest": "https://raw.githubusercontent.com/examadeus/vtta-dndbeyond/master/module.json",
+  "download": "https://codeload.github.com/examadeus/vtta-dndbeyond/zip/3.3.5"
 }

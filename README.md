@@ -45,3 +45,13 @@ Three settings are available:
 # Item compendium, Spell compendium and Monster compendium
 
 Select the three created compendiums: Spell compendium is required, the other ones are optional.
+
+## Contributing
+
+WIP, but use MIT. Be nice, don't be an asshole.
+
+### Toolchain
+
+- Volta ([link](https://volta.sh)])
+- Node (managed by volta)
+- NPM (managed by volta)
