@@ -1,5 +1,5 @@
-import DICTIONARY from "../dictionary.js";
-import utils from "../../utils.js";
+import DICTIONARY from '../dictionary.js'
+import utils from '../../utils.js'
 
 /**
  * Gets the DND5E weapontype (simpleM, martialR etc.) as string
@@ -7,31 +7,31 @@ import utils from "../../utils.js";
  * @param {obj} data item data
  */
 let getWeaponType = (data) => {
-  const weaponBehavior = data.definition.weaponBehaviors[0];
-  const type = DICTIONARY.weapon.weaponType.find((type) => type.categoryId === weaponBehavior.categoryId);
-  const range = DICTIONARY.weapon.weaponRange.find((type) => type.attackType === weaponBehavior.attackType);
+  const weaponBehavior = data.definition.weaponBehaviors[0]
+  const type = DICTIONARY.weapon.weaponType.find((type) => type.categoryId === weaponBehavior.categoryId)
+  const range = DICTIONARY.weapon.weaponRange.find((type) => type.attackType === weaponBehavior.attackType)
 
   if (type && range) {
-    return `${type.value}${range.value}`;
+    return `${type.value}${range.value}`
   } else {
-    return "simpleM";
+    return 'simpleM'
   }
-};
+}
 
 /**
  * Gets the weapons's properties (Finesse, Reach, Heavy etc.)
  * @param {obj} data Item data
  */
 let getProperties = (data) => {
-  let weaponBehavior = data.definition.weaponBehaviors[0];
-  let result = {};
+  let weaponBehavior = data.definition.weaponBehaviors[0]
+  let result = {}
   DICTIONARY.weapon.properties.forEach((property) => {
     if (weaponBehavior.properties && Array.isArray(weaponBehavior.properties)) {
-      result[property.value] = weaponBehavior.properties.find((prop) => prop.name === property.name) !== undefined;
+      result[property.value] = weaponBehavior.properties.find((prop) => prop.name === property.name) !== undefined
     }
-  });
-  return result;
-};
+  })
+  return result
+}
 
 /**
  * Checks the proficiency of the character with this specific weapon
@@ -41,50 +41,50 @@ let getProperties = (data) => {
  */
 let getProficient = (data, weaponType, proficiencies) => {
   // if it's a simple weapon and the character is proficient in simple weapons:
-  if (proficiencies.find((proficiency) => proficiency.name === "Simple Weapons") && weaponType.indexOf("simple") !== -1)
-    return true;
+  if (proficiencies.find((proficiency) => proficiency.name === 'Simple Weapons') && weaponType.indexOf('simple') !== -1)
+    return true
   if (
-    proficiencies.find((proficiency) => proficiency.name === "Martial Weapons") &&
-    weaponType.indexOf("martial") !== -1
+    proficiencies.find((proficiency) => proficiency.name === 'Martial Weapons') &&
+    weaponType.indexOf('martial') !== -1
   )
-    return true;
-  return proficiencies.find((proficiency) => proficiency.name === data.definition.type) !== undefined;
-};
+    return true
+  return proficiencies.find((proficiency) => proficiency.name === data.definition.type) !== undefined
+}
 
 /**
  * Checks if the character can attune to an item and if yes, if he is attuned to it.
  */
 let getAttuned = (data) => {
   if (data.definition.canAttune !== undefined && data.definition.canAttune === true) {
-    return data.isAttuned;
+    return data.isAttuned
   } else {
-    return false;
+    return false
   }
-};
+}
 
 /**
  * Checks if the character can equip an item and if yes, if he is has it currently equipped.
  */
 let getEquipped = (data) => {
   if (data.definition.canEquip !== undefined && data.definition.canEquip === true) {
-    return data.equipped;
+    return data.equipped
   } else {
-    return false;
+    return false
   }
-};
+}
 
 /**
  * Gets the range(s) of a given weapon
  */
 let getRange = (data) => {
   // range: { value: null, long: null, units: '' },
-  let weaponBehavior = data.definition.weaponBehaviors[0];
+  let weaponBehavior = data.definition.weaponBehaviors[0]
   return {
     value: weaponBehavior.range ? weaponBehavior.range : 5,
     long: weaponBehavior.longRange ? weaponBehavior.longRange : 5,
-    units: "ft.",
-  };
-};
+    units: 'ft.',
+  }
+}
 
 /**
  * Gets Limited uses information, if any
@@ -122,22 +122,22 @@ let getRange = (data) => {
 let getAbility = (weaponProperties, weaponRange, abilities) => {
   // finesse weapons can choose freely, so we choose the higher one
   if (weaponProperties.fin) {
-    return abilities.str.value > abilities.dex.value ? "str" : "dex";
+    return abilities.str.value > abilities.dex.value ? 'str' : 'dex'
   }
 
   // thrown, but not finesse weapon: STR
   if (weaponProperties.thr) {
-    return "str";
+    return 'str'
   }
 
   // if it's a ranged weapon, and hot a reach weapon (long = 10 (?))
   if (weaponRange.long !== 5 && !weaponProperties.rch) {
-    return "dex";
+    return 'dex'
   }
 
   // the default is STR
-  return "str";
-};
+  return 'str'
+}
 
 /**
  * Searches for a magical attack bonus granted by this weapon
@@ -145,11 +145,11 @@ let getAbility = (weaponProperties, weaponRange, abilities) => {
  */
 let getMagicalBonus = (data) => {
   let boni = data.definition.grantedModifiers.filter(
-    (mod) => mod.type === "bonus" && mod.subType === "magic" && mod.value && mod.value !== 0
-  );
-  let bonus = boni.reduce((prev, cur) => prev + cur.value, 0);
-  return bonus;
-};
+    (mod) => mod.type === 'bonus' && mod.subType === 'magic' && mod.value && mod.value !== 0,
+  )
+  let bonus = boni.reduce((prev, cur) => prev + cur.value, 0)
+  return bonus
+}
 
 /**
  *
@@ -158,53 +158,53 @@ let getMagicalBonus = (data) => {
  * /* damage: { parts: [], versatile: '' }, * /
  */
 let getDamage = (data, magicalDamageBonus) => {
-  let weaponBehavior = data.definition.weaponBehaviors[0];
-  let versatile = weaponBehavior.properties.find((property) => property.name === "Versatile");
+  let weaponBehavior = data.definition.weaponBehaviors[0]
+  let versatile = weaponBehavior.properties.find((property) => property.name === 'Versatile')
   if (versatile && versatile.notes) {
-    versatile = utils.parseDiceString(versatile.notes + `+${magicalDamageBonus}`).diceString;
+    versatile = utils.parseDiceString(versatile.notes + `+${magicalDamageBonus}`).diceString
   } else {
-    versatile = "";
+    versatile = ''
   }
 
-  let parts = [];
+  let parts = []
 
   // first damage part
   // blowguns and other weapons rely on ammunition that provides the damage parts
   if (weaponBehavior.damage && weaponBehavior.damage.diceString && weaponBehavior.damageType) {
     parts.push([
       utils.parseDiceString(weaponBehavior.damage.diceString + `+${magicalDamageBonus}`).diceString,
-      utils.findInConfig("damageTypes", weaponBehavior.damageType),
-    ]);
+      utils.findInConfig('damageTypes', weaponBehavior.damageType),
+    ])
   }
 
   // additional damage parts
   data.definition.grantedModifiers
-    .filter((mod) => mod.type === "damage")
+    .filter((mod) => mod.type === 'damage')
     .forEach((mod) => {
       if (mod.dice) {
-        parts.push([mod.dice.diceString, mod.subType]);
+        parts.push([mod.dice.diceString, mod.subType])
       } else if (mod.value) {
-        parts.push([mod.value, mod.subType]);
+        parts.push([mod.value, mod.subType])
       }
-    });
+    })
 
   let result = {
     // label: utils.parseDiceString(parts.map(part => part[0]).join(' + ')).diceString,
     parts: parts,
     versatile: versatile,
-  };
+  }
 
-  return result;
-};
+  return result
+}
 
 export default function parseStaff(data, character) {
   /**
    * MAIN parseStaff
    */
-  let template = JSON.parse(utils.getTemplate("weapon"));
+  let template = JSON.parse(utils.getTemplate('weapon'))
   let weapon = {
     name: data.definition.name,
-    type: "weapon",
+    type: 'weapon',
     data: template,
     flags: {
       vtta: {
@@ -213,10 +213,10 @@ export default function parseStaff(data, character) {
         },
       },
     },
-  };
+  }
 
   /* weaponType: { value: 'simpleM' }, */
-  weapon.data.weaponType = getWeaponType(data);
+  weapon.data.weaponType = getWeaponType(data)
   // properties: {
   //        amm: false,
   //        fin: false,
@@ -230,10 +230,10 @@ export default function parseStaff(data, character) {
   //        two: true,
   //        ver: false
   //    }
-  weapon.data.properties = getProperties(data);
+  weapon.data.properties = getProperties(data)
 
   /* proficient: true, */
-  weapon.data.proficient = getProficient(data, weapon.data.weaponType, character.flags.vtta.dndbeyond.proficiencies);
+  weapon.data.proficient = getProficient(data, weapon.data.weaponType, character.flags.vtta.dndbeyond.proficiencies)
 
   // description: {
   //        value: '',
@@ -244,36 +244,36 @@ export default function parseStaff(data, character) {
     value: data.definition.description,
     chat: data.definition.description,
     unidentified: data.definition.type,
-  };
+  }
 
   /* source: '', */
-  weapon.data.source = utils.parseSource(data.definition);
+  weapon.data.source = utils.parseSource(data.definition)
 
   /* quantity: 1, */
-  weapon.data.quantity = data.quantity ? data.quantity : 1;
+  weapon.data.quantity = data.quantity ? data.quantity : 1
 
   /* weight */
-  const bundleSize = data.definition.bundleSize ? data.definition.bundleSize : 1;
-  const totalWeight = data.definition.weight ? data.definition.weight : 0;
-  weapon.data.weight = totalWeight / bundleSize;
+  const bundleSize = data.definition.bundleSize ? data.definition.bundleSize : 1
+  const totalWeight = data.definition.weight ? data.definition.weight : 0
+  weapon.data.weight = totalWeight / bundleSize
 
   /* price */
-  weapon.data.price = data.definition.cost ? data.definition.cost : 0;
+  weapon.data.price = data.definition.cost ? data.definition.cost : 0
 
   /* attuned: false, */
-  weapon.data.attuned = getAttuned(data);
+  weapon.data.attuned = getAttuned(data)
 
   /* equipped: false, */
-  weapon.data.equipped = getEquipped(data);
+  weapon.data.equipped = getEquipped(data)
 
   /* rarity: '', */
-  weapon.data.rarity = data.definition.rarity;
+  weapon.data.rarity = data.definition.rarity
 
   /* identified: true, */
-  weapon.data.identified = true;
+  weapon.data.identified = true
 
   /* activation: { type: '', cost: 0, condition: '' }, */
-  weapon.data.activation = { type: "action", cost: 1, condition: "" };
+  weapon.data.activation = { type: 'action', cost: 1, condition: '' }
 
   /* duration: { value: null, units: '' }, */
   // we leave that as-is
@@ -282,7 +282,7 @@ export default function parseStaff(data, character) {
   // we leave that as-is
 
   /* range: { value: null, long: null, units: '' }, */
-  weapon.data.range = getRange(data);
+  weapon.data.range = getRange(data)
 
   // we don't parse this because the weapon then becomes a limited use item.
   // this field is normally reserved on weapons for magic effects. so we handle it there.
@@ -290,13 +290,13 @@ export default function parseStaff(data, character) {
   // weapon.data.uses = getUses(data);
 
   /* ability: null, */
-  weapon.data.ability = getAbility(weapon.data.properties, weapon.data.range, character.data.abilities);
+  weapon.data.ability = getAbility(weapon.data.properties, weapon.data.range, character.data.abilities)
 
   /* actionType: null, */
-  weapon.data.actionType = weapon.data.range.long === 5 ? "mwak" : "rwak";
+  weapon.data.actionType = weapon.data.range.long === 5 ? 'mwak' : 'rwak'
 
   /* attackBonus: 0, */
-  weapon.data.attackBonus = getMagicalBonus(data);
+  weapon.data.attackBonus = getMagicalBonus(data)
 
   /* chatFlavor: '', */
   // we leave that as-is
@@ -307,7 +307,7 @@ export default function parseStaff(data, character) {
   /* damage: { parts: [], versatile: '' }, */
   // again, we are adding the magical damage bonus to the damage, and again
   // even while I dislike to not use weapon.data.attackBonus, it makes it more clear about what is going on
-  weapon.data.damage = getDamage(data, getMagicalBonus(data));
+  weapon.data.damage = getDamage(data, getMagicalBonus(data))
 
   /* formula: '', */
   // we leave that as-is
@@ -315,5 +315,5 @@ export default function parseStaff(data, character) {
   /* save: { ability: '', dc: null } */
   // we leave that as-is
 
-  return weapon;
+  return weapon
 }

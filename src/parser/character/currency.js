@@ -5,5 +5,5 @@ export function getCurrency(data) {
     ep: data.character.currencies.ep,
     sp: data.character.currencies.sp,
     cp: data.character.currencies.cp,
-  };
+  }
 }

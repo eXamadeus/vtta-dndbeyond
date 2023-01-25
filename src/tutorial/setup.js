@@ -134,4 +134,4 @@ export default async () => {
   //   tutorialStep++;
   //   game.settings.set("vtta-dndbeyond", "tutorial-step", tutorialStep);
   // }
-};
+}

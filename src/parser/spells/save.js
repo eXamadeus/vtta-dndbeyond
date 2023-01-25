@@ -1,26 +1,27 @@
-import DICTIONARY from "../dictionary.js";
+import DICTIONARY from '../dictionary.js'
 
 export function getSave(data) {
   if (data.definition.requiresSavingThrow && data.definition.saveDcAbilityId) {
-    const saveAbility = DICTIONARY.character.abilities.find((ability) => ability.id === data.definition.saveDcAbilityId)
-      .value;
+    const saveAbility = DICTIONARY.character.abilities.find(
+      (ability) => ability.id === data.definition.saveDcAbilityId,
+    ).value
     if (data.overrideSaveDc) {
       return {
         ability: saveAbility,
         dc: data.overrideSaveDc,
-        scaling: "flat",
-      };
+        scaling: 'flat',
+      }
     } else {
       return {
         ability: saveAbility,
         dc: null,
-        scaling: "spell",
-      };
+        scaling: 'spell',
+      }
     }
   } else {
     return {
-      ability: "",
+      ability: '',
       dc: null,
-    };
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { tutorialConnectToFoundry } from "../../tutorial/index.js";
+import { tutorialConnectToFoundry } from '../../tutorial/index.js'
 
 export default () => {
   // prettier-ignore
@@ -15,4 +15,4 @@ export default () => {
       null
     );
   }
-};
+}

@@ -1,7 +1,7 @@
-import utils from "../../../utils.js";
+import utils from '../../../utils.js'
 
 const queryMonster = async (message) => {
-  const normalizedName = utils.normalizeString(message.name);
+  const normalizedName = utils.normalizeString(message.name)
 
   const result = {
     user: {
@@ -17,25 +17,25 @@ const queryMonster = async (message) => {
       entities: [],
     },
     compendium: {
-      name: game.settings.get("vtta-dndbeyond", "entity-monster-compendium"),
+      name: game.settings.get('vtta-dndbeyond', 'entity-monster-compendium'),
       entities: [],
     },
-  };
+  }
 
   // check the world for this monster
   result.world.entities = game.actors.entities
     .filter(
       (entity) =>
-        entity.data.type === "npc" &&
+        entity.data.type === 'npc' &&
         utils.normalizeString(entity.data.name) === normalizedName &&
-        entity.owner === true
+        entity.owner === true,
     )
     .map((entity) => {
       return {
         id: entity._id,
         name: utils.getFolderHierarchy(entity.folder),
-      };
-    });
+      }
+    })
 
   // check the current scene, too
   if (game.scenes.active) {
@@ -43,57 +43,48 @@ const queryMonster = async (message) => {
     // dndbeyond on the monster's sheet as selectable actors
     // Only actors currently available in the world that have a token placed on the currently active scene
     // are forwarded to dndbeyond
-    let actors = [];
+    let actors = []
     result.scene.entities = game.scenes.active.data.tokens
       .map((token) => {
-        let sceneEntity = undefined;
+        let sceneEntity = undefined
         // otherwise get the token.name directly, which is a more unique id than the actor.name
         const actor = game.actors.entities.find(
           (actor) =>
-            actor.id === token.actorId &&
-            utils.normalizeString(actor.name) === normalizedName &&
-            actor.owner === true
-        );
+            actor.id === token.actorId && utils.normalizeString(actor.name) === normalizedName && actor.owner === true,
+        )
         if (actor) {
           // if an actorData name is set, this takes precedence
-          if (
-            token.actorData &&
-            token.actorData.name &&
-            !actors.includes(token.actorData.name)
-          ) {
+          if (token.actorData && token.actorData.name && !actors.includes(token.actorData.name)) {
             sceneEntity = {
               id: token.id,
               name: token.actorData.name,
-            };
+            }
           } else if (!actors.includes(token.name)) {
             // remember this token's name
-            actors.push(token.name);
+            actors.push(token.name)
 
             sceneEntity = {
               id: token.id,
               name: token.name,
-            };
+            }
           }
         }
-        return sceneEntity;
+        return sceneEntity
       })
-      .filter((entity) => entity !== undefined);
+      .filter((entity) => entity !== undefined)
 
     // sort the result alphabetically
     result.scene.entities.sort((a, b) => {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
-      return 0;
-    });
+      if (a.name < b.name) return -1
+      if (a.name > b.name) return 1
+      return 0
+    })
   }
 
   //  check the monster compendium, too
-  let compendiumEntry = await utils.queryCompendium(
-    result.compendium.name,
-    message.name
-  );
-  result.compendium.entities = compendiumEntry ? [compendiumEntry] : [];
-  return result;
-};
+  let compendiumEntry = await utils.queryCompendium(result.compendium.name, message.name)
+  result.compendium.entities = compendiumEntry ? [compendiumEntry] : []
+  return result
+}
 
-export default queryMonster;
+export default queryMonster

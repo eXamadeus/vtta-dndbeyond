@@ -10,7 +10,7 @@
 
 .Stat-Block-Styles_Stat-Block-Title {
   font-size: 18px !important;
-  font-family: "Roboto Condensed", Roboto, Helvetica, sans-serif;
+  font-family: 'Roboto Condensed', Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   font-weight: bold;
   line-height: 1.4 !important;
@@ -70,5 +70,5 @@
 .Stat-Block-Styles_Stat-Block-Heading--after-last-bar- {
   font-size: 16px !important;
   font-weight: bold;
-  font-family: "Roboto Condensed", Roboto, Helvetica, sans-serif;
+  font-family: 'Roboto Condensed', Roboto, Helvetica, sans-serif;
 }

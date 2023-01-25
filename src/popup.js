@@ -1,18 +1,18 @@
-import utils from "./utils.js";
+import utils from './utils.js'
 
 export default async () => {
   let hasShownPopup =
     utils.versionCompare(
-      game.modules.get("vtta-dndbeyond").data.version,
-      game.settings.get("vtta-dndbeyond", "popup-version")
-    ) !== 1;
+      game.modules.get('vtta-dndbeyond').data.version,
+      game.settings.get('vtta-dndbeyond', 'popup-version'),
+    ) !== 1
   if (hasShownPopup) {
-    return true;
+    return true
   }
 
   // display the popup for this release
   let result = await window.vtta.hint.show(
-    `<h1>VTTA D&D Beyond Integration v${game.modules.get("vtta-dndbeyond").data.version}</h1>
+    `<h1>VTTA D&D Beyond Integration v${game.modules.get('vtta-dndbeyond').data.version}</h1>
     <h2>Character Import</h2>
     <p>Please note that the <b>character import is now working differently</b> by using a more user-friendly workflow, you can find the updated instructions found in the <b>character import window</b> accessible by the [B] button on an player's character sheet.</p>
     <p>We <b>don't know if that workflow is reliably working</b> or if D&amp;D Beyond is <b>flagging us as a bot</b> in the future, rendering this possibility unusable. By this release, we are using the new mechanism the first time at scale (there are roughly 3.000 character imports <b>per day</b>),
@@ -22,19 +22,19 @@ export default async () => {
        `,
     {
       element: null,
-      align: "CENTER",
+      align: 'CENTER',
       hide: {
         selector: '#sidebar-tabs a[data-tab="compendium"]',
-        event: "click",
+        event: 'click',
       },
-      buttons: ["Dismiss until updated", "Close"],
+      buttons: ['Dismiss until updated', 'Close'],
       width: window.innerWidth / 2,
-    }
-  );
+    },
+  )
 
-  if (result !== "Close") {
+  if (result !== 'Close') {
     // set the version number for the popup to be shown to this version
-    game.settings.set("vtta-dndbeyond", "popup-version", game.modules.get("vtta-dndbeyond").data.version);
+    game.settings.set('vtta-dndbeyond', 'popup-version', game.modules.get('vtta-dndbeyond').data.version)
   }
-  return result;
-};
+  return result
+}

@@ -1,22 +1,22 @@
-import utils from "../../../utils.js";
+import utils from '../../../utils.js'
 
 const querySpells = async (message) => {
-  const GET_SPELL_ENTITIES = true;
-  let compendium = await game.settings.get("vtta-dndbeyond", "entity-spell-compendium");
+  const GET_SPELL_ENTITIES = true
+  let compendium = await game.settings.get('vtta-dndbeyond', 'entity-spell-compendium')
 
   if (Array.isArray(message.name)) {
-    let details = await utils.queryCompendiumEntries(compendium, message.name, GET_SPELL_ENTITIES);
+    let details = await utils.queryCompendiumEntries(compendium, message.name, GET_SPELL_ENTITIES)
     // prepare the expected object
-    let result = {};
-    let idx = 0;
+    let result = {}
+    let idx = 0
     for (let spellName of message.name) {
-      result[spellName] = details[idx++];
+      result[spellName] = details[idx++]
     }
-    return { spell: result };
+    return { spell: result }
   } else {
-    const details = await utils.queryCompendiumEntry(compendium, message.name);
-    return { spell: details };
+    const details = await utils.queryCompendiumEntry(compendium, message.name)
+    return { spell: details }
   }
-};
+}
 
-export default querySpells;
+export default querySpells

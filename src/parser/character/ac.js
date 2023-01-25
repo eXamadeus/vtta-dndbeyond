@@ -1,5 +1,5 @@
-import DICTIONARY from "../dictionary.js";
-import utils from "../../utils.js";
+import DICTIONARY from '../dictionary.js'
+import utils from '../../utils.js'
 
 /**
  * This excludes shields
@@ -8,156 +8,154 @@ import utils from "../../utils.js";
 export function isArmored(data) {
   return (
     data.character.inventory.filter(
-      (item) => item.equipped && item.definition.armorClass && item.definition.armorTypeId !== 4
+      (item) => item.equipped && item.definition.armorClass && item.definition.armorTypeId !== 4,
     ).length >= 1
-  );
+  )
 }
 
 let getMinimumBaseAC = (modifiers) => {
   let hasBaseArmor = modifiers.filter(
-    (modifier) => modifier.type === "set" && modifier.subType === "minimum-base-armor" && modifier.isGranted
-  );
-  let baseAC = [];
+    (modifier) => modifier.type === 'set' && modifier.subType === 'minimum-base-armor' && modifier.isGranted,
+  )
+  let baseAC = []
   hasBaseArmor.forEach((base) => {
-    baseAC.push(base.value);
-  });
-  return baseAC;
-};
+    baseAC.push(base.value)
+  })
+  return baseAC
+}
 
 let getBaseArmor = (ac, armorType) => {
   return {
     definition: {
-      name: "Base Armor - Racial",
+      name: 'Base Armor - Racial',
       type: armorType,
       armorClass: ac,
       armorTypeId: DICTIONARY.equipment.armorType.find((id) => id.name === armorType).id,
       grantedModifiers: [],
       canAttune: false,
-      filterType: "Armor",
+      filterType: 'Armor',
     },
     isAttuned: false,
-  };
-};
+  }
+}
 
 let getEquippedAC = (equippedGear) => {
   return equippedGear.reduce((prev, item) => {
-    let ac = 0;
+    let ac = 0
     // regular armor
     if (item.definition.armorClass) {
-      ac += item.definition.armorClass;
+      ac += item.definition.armorClass
     }
 
     // magical armor
     if (item.definition.grantedModifiers) {
-      let isAvailable = false;
+      let isAvailable = false
       // does an item need attuning
       if (item.definition.canAttune === true) {
         if (item.isAttuned === true) {
-          isAvailable = true;
+          isAvailable = true
         }
       } else {
-        isAvailable = true;
+        isAvailable = true
       }
 
       if (isAvailable) {
         item.definition.grantedModifiers.forEach((modifier) => {
-          if (modifier.type === "bonus" && modifier.subType === "armor-class") {
+          if (modifier.type === 'bonus' && modifier.subType === 'armor-class') {
             // add this to armor AC
-            ac += modifier.value;
+            ac += modifier.value
           }
-        });
+        })
       }
     }
-    return prev + ac;
-  }, 0);
-};
+    return prev + ac
+  }, 0)
+}
 
 // returns an array of ac values from provided array of modifiers
 let getUnarmoredAC = (modifiers, character) => {
-  let unarmoredACValues = [];
+  let unarmoredACValues = []
   const isUnarmored = modifiers.filter(
-    (modifier) => modifier.type === "set" && modifier.subType === "unarmored-armor-class" && modifier.isGranted
-  );
+    (modifier) => modifier.type === 'set' && modifier.subType === 'unarmored-armor-class' && modifier.isGranted,
+  )
 
   isUnarmored.forEach((unarmored) => {
-    let unarmoredACValue = 10;
+    let unarmoredACValue = 10
     // +DEX
-    unarmoredACValue += character.data.abilities.dex.mod;
+    unarmoredACValue += character.data.abilities.dex.mod
     // +WIS or +CON, if monk or barbarian, draconic resilience === null
 
     if (unarmored.statId !== null) {
-      let ability = DICTIONARY.character.abilities.find((ability) => ability.id === unarmored.statId);
-      unarmoredACValue += character.data.abilities[ability.value].mod;
+      let ability = DICTIONARY.character.abilities.find((ability) => ability.id === unarmored.statId)
+      unarmoredACValue += character.data.abilities[ability.value].mod
     } else {
       // others are picked up here e.g. Draconic Resilience
-      unarmoredACValue += unarmored.value;
+      unarmoredACValue += unarmored.value
     }
-    unarmoredACValues.push(unarmoredACValue);
-  });
-  return unarmoredACValues;
-};
+    unarmoredACValues.push(unarmoredACValue)
+  })
+  return unarmoredACValues
+}
 
 // returns an array of ac values from provided array of modifiers
 let getArmoredACBonuses = (modifiers, character) => {
-  let armoredACBonuses = [];
+  let armoredACBonuses = []
   const armoredBonuses = modifiers.filter(
-    (modifier) => modifier.subType === "armored-armor-class" && modifier.isGranted
-  );
+    (modifier) => modifier.subType === 'armored-armor-class' && modifier.isGranted,
+  )
 
   armoredBonuses.forEach((armoredBonus) => {
-    let armoredACBonus = 0;
+    let armoredACBonus = 0
     if (armoredBonus.statId !== null) {
-      let ability = DICTIONARY.character.abilities.find((ability) => ability.id === armoredBonus.statId);
-      armoredACBonus += character.data.abilities[ability.value].mod;
+      let ability = DICTIONARY.character.abilities.find((ability) => ability.id === armoredBonus.statId)
+      armoredACBonus += character.data.abilities[ability.value].mod
     } else {
-      armoredACBonus += armoredBonus.value;
+      armoredACBonus += armoredBonus.value
     }
-    armoredACBonuses.push(armoredACBonus);
-  });
-  return armoredACBonuses;
-};
+    armoredACBonuses.push(armoredACBonus)
+  })
+  return armoredACBonuses
+}
 
 export function getArmorClass(data, character) {
   // array to assemble possible AC values
-  let armorClassValues = [];
+  let armorClassValues = []
   // get a list of equipped armor
   // we make a distinction so we can loop over armor
-  let equippedArmor = data.character.inventory.filter(
-    (item) => item.equipped && item.definition.filterType === "Armor"
-  );
-  let baseAC = 10;
+  let equippedArmor = data.character.inventory.filter((item) => item.equipped && item.definition.filterType === 'Armor')
+  let baseAC = 10
   // for things like fighters fighting style
-  let miscACBonus = 0;
+  let miscACBonus = 0
   // lets get equipped gear
   const equippedGear = data.character.inventory.filter(
-    (item) => item.equipped && item.definition.filterType !== "Armor"
-  );
+    (item) => item.equipped && item.definition.filterType !== 'Armor',
+  )
   const unarmoredACBonus = utils
-    .filterBaseModifiers(data, "bonus", "unarmored-armor-class")
-    .reduce((prev, cur) => prev + cur.value, 0);
+    .filterBaseModifiers(data, 'bonus', 'unarmored-armor-class')
+    .reduce((prev, cur) => prev + cur.value, 0)
 
   // lets get the AC for all our non-armored gear, we'll add this later
-  const gearAC = getEquippedAC(equippedGear);
+  const gearAC = getEquippedAC(equippedGear)
 
   // While not wearing armor, lets see if we have special abilities
   if (!isArmored(data)) {
     // unarmored abilities from Class/Race?
-    const unarmoredSources = [data.character.modifiers.class, data.character.modifiers.race];
+    const unarmoredSources = [data.character.modifiers.class, data.character.modifiers.race]
     unarmoredSources.forEach((modifiers) => {
-      const unarmoredAC = Math.max(getUnarmoredAC(modifiers, character));
+      const unarmoredAC = Math.max(getUnarmoredAC(modifiers, character))
       if (unarmoredAC) {
         // we add this as an armored type so we can get magical item bonuses
         // e.g. ring of protection
-        equippedArmor.push(getBaseArmor(unarmoredAC, "Unarmored Defense"));
+        equippedArmor.push(getBaseArmor(unarmoredAC, 'Unarmored Defense'))
       }
-    });
+    })
   } else {
     // check for things like fighters fighting style defense
-    const armorBonusSources = [data.character.modifiers.class, data.character.modifiers.race];
+    const armorBonusSources = [data.character.modifiers.class, data.character.modifiers.race]
     armorBonusSources.forEach((modifiers) => {
-      const armoredACBonuses = getArmoredACBonuses(modifiers, character);
-      miscACBonus += armoredACBonuses.reduce((a, b) => a + b, 0);
-    });
+      const armoredACBonuses = getArmoredACBonuses(modifiers, character)
+      miscACBonus += armoredACBonuses.reduce((a, b) => a + b, 0)
+    })
   }
 
   // Generic AC bonuses like Warforfed Integrated Protection
@@ -167,37 +165,37 @@ export function getArmorClass(data, character) {
     data.character.modifiers.race,
     data.character.modifiers.background,
     data.character.modifiers.feat,
-  ];
+  ]
 
-  utils.filterModifiers(miscModifiers, "bonus", "armor-class").forEach((bonus) => {
-    miscACBonus += bonus.value;
-  });
+  utils.filterModifiers(miscModifiers, 'bonus', 'armor-class').forEach((bonus) => {
+    miscACBonus += bonus.value
+  })
 
   // Each racial armor appears to be slightly different!
   // We care about Tortles and Lizardfolk here as they can use shields, but their
   // modifier is set differently
   switch (data.character.race.fullName) {
-    case "Lizardfolk":
-      baseAC = Math.max(getUnarmoredAC(data.character.modifiers.race, character));
-      equippedArmor.push(getBaseArmor(baseAC, "Natural Armor"));
-      break;
-    case "Tortle":
-      baseAC = Math.max(getMinimumBaseAC(data.character.modifiers.race, character));
-      equippedArmor.push(getBaseArmor(baseAC, "Natural Armor"));
-      break;
+    case 'Lizardfolk':
+      baseAC = Math.max(getUnarmoredAC(data.character.modifiers.race, character))
+      equippedArmor.push(getBaseArmor(baseAC, 'Natural Armor'))
+      break
+    case 'Tortle':
+      baseAC = Math.max(getMinimumBaseAC(data.character.modifiers.race, character))
+      equippedArmor.push(getBaseArmor(baseAC, 'Natural Armor'))
+      break
     default:
-      equippedArmor.push(getBaseArmor(baseAC, "Unarmored"));
+      equippedArmor.push(getBaseArmor(baseAC, 'Unarmored'))
   }
 
-  const shields = equippedArmor.filter((shield) => shield.definition.armorTypeId === 4);
-  const armors = equippedArmor.filter((armour) => armour.definition.armorTypeId !== 4);
+  const shields = equippedArmor.filter((shield) => shield.definition.armorTypeId === 4)
+  const armors = equippedArmor.filter((armour) => armour.definition.armorTypeId !== 4)
 
-  utils.log("Calculated GearAC: " + gearAC);
-  utils.log("Unarmoured AC Bonus:" + unarmoredACBonus);
-  utils.log("Calculated MiscACBonus: " + miscACBonus);
-  utils.log("Equipped AC Options: " + JSON.stringify(equippedArmor));
-  utils.log("Armors: " + JSON.stringify(armors));
-  utils.log("Shields: " + JSON.stringify(shields));
+  utils.log('Calculated GearAC: ' + gearAC)
+  utils.log('Unarmoured AC Bonus:' + unarmoredACBonus)
+  utils.log('Calculated MiscACBonus: ' + miscACBonus)
+  utils.log('Equipped AC Options: ' + JSON.stringify(equippedArmor))
+  utils.log('Armors: ' + JSON.stringify(armors))
+  utils.log('Shields: ' + JSON.stringify(shields))
 
   // the presumption here is that you can only wear a shield and a single
   // additional 'armor' piece. in DDB it's possible to equip multiple armor
@@ -206,14 +204,14 @@ export function getArmorClass(data, character) {
   // we might have multiple shields "equipped" by accident, so work out
   // the best one
   for (var armor = 0; armor < armors.length; armor++) {
-    let armorAC = 0;
+    let armorAC = 0
     if (shields.length === 0) {
       // getEquippedAC fetches any magical AC boost on the items passed
-      armorAC = getEquippedAC([armors[armor]]);
+      armorAC = getEquippedAC([armors[armor]])
     } else {
       for (var shield = 0; shield < shields.length; shield++) {
-        const combinedAC = getEquippedAC([armors[armor], shields[shield]]);
-        if (combinedAC > armorAC) armorAC = combinedAC;
+        const combinedAC = getEquippedAC([armors[armor], shields[shield]])
+        if (combinedAC > armorAC) armorAC = combinedAC
       }
     }
 
@@ -224,54 +222,54 @@ export function getArmorClass(data, character) {
     // Unarmored Defense: Dex mod already included in calculation
 
     // sometimes the type field can be blank in DDB
-    if (!armors[armor].definition.type || armors[armor].definition.type === "") {
-      const armourTypeId = armors[armor].definition.armorTypeId;
-      const acType = DICTIONARY.equipment.armorType.find((a) => a.id === armourTypeId);
-      if (acType) armors[armor].definition.type = acType.name;
+    if (!armors[armor].definition.type || armors[armor].definition.type === '') {
+      const armourTypeId = armors[armor].definition.armorTypeId
+      const acType = DICTIONARY.equipment.armorType.find((a) => a.id === armourTypeId)
+      if (acType) armors[armor].definition.type = acType.name
     }
 
     switch (armors[armor].definition.type) {
-      case "Natural Armor":
-      case "Unarmored Defense":
+      case 'Natural Armor':
+      case 'Unarmored Defense':
         armorClassValues.push({
           name: armors[armor].definition.name,
           value: armorAC + gearAC + miscACBonus + unarmoredACBonus,
-        });
-        break;
-      case "Heavy Armor":
+        })
+        break
+      case 'Heavy Armor':
         armorClassValues.push({
           name: armors[armor].definition.name,
           value: armorAC + gearAC + miscACBonus,
-        });
-        break;
-      case "Medium Armor":
+        })
+        break
+      case 'Medium Armor':
         armorClassValues.push({
           name: armors[armor].definition.name,
           value: armorAC + Math.min(2, character.data.abilities.dex.mod) + gearAC + miscACBonus,
-        });
-        break;
-      case "Light Armor":
+        })
+        break
+      case 'Light Armor':
         armorClassValues.push({
           name: armors[armor].definition.name,
           value: armorAC + character.data.abilities.dex.mod + gearAC + miscACBonus,
-        });
-        break;
+        })
+        break
       default:
         armorClassValues.push({
           name: armors[armor].definition.name,
           value: armorAC + character.data.abilities.dex.mod + gearAC + miscACBonus,
-        });
-        break;
+        })
+        break
     }
   }
 
-  utils.log(armorClassValues);
+  utils.log(armorClassValues)
   // get the max AC we can use from our various computed values
-  const max = Math.max(...armorClassValues.map((type) => type.value));
+  const max = Math.max(...armorClassValues.map((type) => type.value))
 
   return {
-    type: "Number",
-    label: "Armor Class",
+    type: 'Number',
+    label: 'Armor Class',
     value: max,
-  };
+  }
 }

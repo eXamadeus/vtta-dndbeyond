@@ -1,6 +1,6 @@
-import utils from "../../utils.js";
+import utils from '../../utils.js'
 
-export function getSpecialTraits (data) {
+export function getSpecialTraits(data) {
   let results = {
     powerfulBuild: false,
     savageAttacks: false,
@@ -13,36 +13,36 @@ export function getSpecialTraits (data) {
     observantFeat: false,
     remarkableAthlete: false,
     reliableTalent: false,
-  };
+  }
 
   // powerful build/equine build
   results.powerfulBuild =
     data.character.race.racialTraits.filter(
-      (trait) => trait.definition.name === "Equine Build" || trait.definition.name === "Powerful Build"
-    ).length > 0;
+      (trait) => trait.definition.name === 'Equine Build' || trait.definition.name === 'Powerful Build',
+    ).length > 0
 
   // savage attacks
   results.savageAttacks =
-    data.character.race.racialTraits.filter((trait) => trait.definition.name === "Savage Attacks").length > 0;
+    data.character.race.racialTraits.filter((trait) => trait.definition.name === 'Savage Attacks').length > 0
 
   // halfling lucky
   results.halflingLucky =
-    data.character.race.racialTraits.filter((trait) => trait.definition.name === "Lucky").length > 0;
+    data.character.race.racialTraits.filter((trait) => trait.definition.name === 'Lucky').length > 0
 
   // elven accuracy
-  results.elvenAccuracy = data.character.feats.filter((feat) => feat.definition.name === "Elven Accuracy").length > 0;
+  results.elvenAccuracy = data.character.feats.filter((feat) => feat.definition.name === 'Elven Accuracy').length > 0
 
   // alert feat
-  results.initiativeAlert = data.character.feats.filter((feat) => feat.definition.name === "Alert").length > 0;
+  results.initiativeAlert = data.character.feats.filter((feat) => feat.definition.name === 'Alert').length > 0
 
   // advantage on initiative
-  results.initiativeAdv = utils.filterBaseModifiers(data, "advantage", "initiative").length > 0;
+  results.initiativeAdv = utils.filterBaseModifiers(data, 'advantage', 'initiative').length > 0
 
   // initiative half prof
-  results.initiativeHalfProf = utils.filterBaseModifiers(data, "half-proficiency", "initiative").length > 0;
+  results.initiativeHalfProf = utils.filterBaseModifiers(data, 'half-proficiency', 'initiative').length > 0
 
   // observant
-  results.observantFeat = data.character.feats.filter((feat) => feat.definition.name === "Observant").length > 0;
+  results.observantFeat = data.character.feats.filter((feat) => feat.definition.name === 'Observant').length > 0
 
   // weapon critical threshold
   // fighter improved crit
@@ -52,38 +52,38 @@ export function getSpecialTraits (data) {
       // Improved Critical
       const improvedCritical =
         cls.subclassDefinition.classFeatures.filter(
-          (feature) => feature.name === "Improved Critical" && cls.level >= feature.requiredLevel
-        ).length > 0;
+          (feature) => feature.name === 'Improved Critical' && cls.level >= feature.requiredLevel,
+        ).length > 0
       const superiorCritical =
         cls.subclassDefinition.classFeatures.filter(
-          (feature) => feature.name === "Superior Critical" && cls.level >= feature.requiredLevel
-        ).length > 0;
+          (feature) => feature.name === 'Superior Critical' && cls.level >= feature.requiredLevel,
+        ).length > 0
 
       if (superiorCritical) {
-        results.weaponCriticalThreshold = 18;
+        results.weaponCriticalThreshold = 18
       } else if (improvedCritical) {
-        results.weaponCriticalThreshold = 19;
+        results.weaponCriticalThreshold = 19
       }
 
       // Remarkable Athlete
       results.remarkableAthlete =
         cls.subclassDefinition.classFeatures.filter(
-          (feature) => feature.name === "Remarkable Athlete" && cls.level >= feature.requiredLevel
-        ).length > 0;
+          (feature) => feature.name === 'Remarkable Athlete' && cls.level >= feature.requiredLevel,
+        ).length > 0
     }
 
     // Jack of All Trades
     results.jackOfAllTrades =
       cls.definition.classFeatures.filter(
-        (feature) => feature.name === "Jack of All Trades" && cls.level >= feature.requiredLevel
-      ).length > 0;
+        (feature) => feature.name === 'Jack of All Trades' && cls.level >= feature.requiredLevel,
+      ).length > 0
 
     // Reliable Talent
     results.reliableTalent =
       cls.definition.classFeatures.filter(
-        (feature) => feature.name === "Reliable Talent" && cls.level >= feature.requiredLevel
-      ).length > 0;
-  });
+        (feature) => feature.name === 'Reliable Talent' && cls.level >= feature.requiredLevel,
+      ).length > 0
+  })
 
-  return results;
+  return results
 }

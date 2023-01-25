@@ -21,7 +21,6 @@ both are great companions to this module and make working with new content a joy
 
 - [The Chrome Extension](https://www.vttassets.com/asset/vtta-dndbeyond) allows the import of monsters and spells directly from the D&D Beyond website. While the SRD content, ie. all monsters in the Basic Rules, are importable for everyone, all other monsters from sourcebooks including homebrew monsters require a Patronage on my [Patreon campaign](https://www.patreon.com/join/vttassets).
 
-
 ## Configuration
 
 ### Avatar upload directory
@@ -32,7 +31,7 @@ Examples:
 
 - `img/uploads` references to `[Foundry]/Data/img/uploads`
 - `uploads` references to `[Foundry]/Data/uploads`
-- `` references to `[Foundry]/Data` - not recommended
+- `???` references to`[Foundry]/Data` - not recommended
 
 # Entity import policy
 

@@ -1,7 +1,7 @@
 export default async () => {
-  const EXIT_BUTTON = "Exit Tutorial";
-  const NEXT_BUTTON = "Next";
-  let result;
+  const EXIT_BUTTON = 'Exit Tutorial'
+  const NEXT_BUTTON = 'Next'
+  let result
   /**
    * STEP 1
    */
@@ -12,15 +12,15 @@ export default async () => {
     </ol>
     <p>When you run Foundry VTT by clicking on the Foundry executable, you are starting both components at the same time. This is what I call <b>Native App mode</b>.</p>
     <p>The server is hidden from you and all you see is <b>Native Client component</b> that enables to login and to manage your world.</p>
-    <hr />`;
+    <hr />`
   // Welcome - hidden on "Next"
   result = await window.vtta.hint.show(text, {
-    align: "CENTER",
+    align: 'CENTER',
     buttons: [EXIT_BUTTON, NEXT_BUTTON],
     width: window.innerWidth * 0.5,
-  });
+  })
 
-  if (result === EXIT_BUTTON) return;
+  if (result === EXIT_BUTTON) return
 
   /**
    * STEP 2
@@ -33,15 +33,15 @@ export default async () => {
     Foundry and Chrome are running in seperate processes and are unable to communicate. Let's change that.</p>
     
   </p>
-    <hr />`;
+    <hr />`
   // Welcome - hidden on "Next"
   result = await window.vtta.hint.show(text, {
-    align: "CENTER",
+    align: 'CENTER',
     buttons: [EXIT_BUTTON, NEXT_BUTTON],
     width: window.innerWidth * 0.5,
-  });
+  })
 
-  if (result === EXIT_BUTTON) return;
+  if (result === EXIT_BUTTON) return
 
   /**
    * STEP 3
@@ -66,13 +66,13 @@ export default async () => {
      </ol>
      </li>
   </ol>
-    <hr />`;
+    <hr />`
   // Welcome - hidden on "Next"
   result = await window.vtta.hint.show(text, {
-    align: "CENTER",
+    align: 'CENTER',
     buttons: [EXIT_BUTTON, NEXT_BUTTON],
     width: window.innerWidth * 0.5,
-  });
+  })
 
   /**
    * STEP 4
@@ -87,12 +87,12 @@ export default async () => {
   <li><b>Internet</b> link to send to your friends.</li>
   </p>
   <p>You can find more information on that on the <a href="https://foundryvtt.com/article/installation/" target="_blank">official Foundry VTT knowledge base</a>.</p>
-   <hr />`;
+   <hr />`
   // Welcome - hidden on "Next"
   result = await window.vtta.hint.show(text, {
-    element: $("#sidebar"),
-    align: "LEFT",
+    element: $('#sidebar'),
+    align: 'LEFT',
     buttons: [EXIT_BUTTON],
     width: window.innerWidth * 0.25,
-  });
-};
+  })
+}

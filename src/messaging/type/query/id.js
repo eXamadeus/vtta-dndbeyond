@@ -1,5 +1,5 @@
 const queryId = async () => {
-  let { id, name, isGM } = game.user;
+  let { id, name, isGM } = game.user
   let entities = game.actors.entities
     .filter((actor) => actor.owner)
     .map((actor) => {
@@ -8,19 +8,19 @@ const queryId = async () => {
             ...new Set(
               game.scenes.active.data.tokens
                 .filter((token) => {
-                  return token.actorId === actor.id && token.name !== actor.name;
+                  return token.actorId === actor.id && token.name !== actor.name
                 })
-                .map((token) => token.name)
+                .map((token) => token.name),
             ),
           ]
-        : [];
+        : []
       return {
-        type: "id",
+        type: 'id',
         id: actor.id,
         name: actor.name,
         aliases: aliases,
-      };
-    });
+      }
+    })
 
   return {
     user: {
@@ -29,8 +29,8 @@ const queryId = async () => {
       isGM: isGM,
     },
     entities: entities,
-    img: window.location.href.replace("/game", "/icons/svg/d20-highlight.svg"),
-  };
-};
+    img: window.location.href.replace('/game', '/icons/svg/d20-highlight.svg'),
+  }
+}
 
-export default queryId;
+export default queryId

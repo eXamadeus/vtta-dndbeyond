@@ -1,7 +1,7 @@
-import utils from "../../../utils.js";
+import utils from '../../../utils.js'
 
 const querySpell = async (message) => {
-  const normalizedName = utils.normalizeString(message.name);
+  const normalizedName = utils.normalizeString(message.name)
   const result = {
     user: {
       name: game.user.name,
@@ -16,34 +16,27 @@ const querySpell = async (message) => {
       entities: [],
     },
     compendium: {
-      name: game.settings.get("vtta-dndbeyond", "entity-spell-compendium"),
+      name: game.settings.get('vtta-dndbeyond', 'entity-spell-compendium'),
       entities: [],
     },
-  };
+  }
 
   // check the world for this monster
   result.world.entities = game.items.entities
-    .filter(
-      (entity) =>
-        entity.data.type === "spell" &&
-        utils.normalizeString(entity.data.name) === normalizedName
-    )
+    .filter((entity) => entity.data.type === 'spell' && utils.normalizeString(entity.data.name) === normalizedName)
     .map((entity) => {
       return {
         id: entity._id,
         name: utils.getFolderHierarchy(entity.folder),
-      };
-    });
+      }
+    })
 
   //  check the monster compendium, too
-  let compendiumEntry = await utils.queryCompendium(
-    result.compendium.name,
-    message.name
-  );
+  let compendiumEntry = await utils.queryCompendium(result.compendium.name, message.name)
 
-  result.compendium.entities = compendiumEntry ? [compendiumEntry] : [];
+  result.compendium.entities = compendiumEntry ? [compendiumEntry] : []
 
-  return result;
-};
+  return result
+}
 
-export default querySpell;
+export default querySpell

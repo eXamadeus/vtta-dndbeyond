@@ -1,4 +1,4 @@
-import utils from "../../utils.js";
+import utils from '../../utils.js'
 
 /**
  * Gets global bonuses to attacks and damage
@@ -14,49 +14,49 @@ import utils from "../../utils.js";
  */
 export function getGlobalBonusAttackModifiers(lookupTable, data, character) {
   let result = {
-    attack: "",
-    damage: "",
-  };
-  const diceFormula = /\d*d\d*/;
+    attack: '',
+    damage: '',
+  }
+  const diceFormula = /\d*d\d*/
 
   let lookupResults = {
     attack: {
       sum: 0,
-      diceString: "",
+      diceString: '',
     },
     damage: {
       sum: 0,
-      diceString: "",
+      diceString: '',
     },
-  };
+  }
 
   lookupTable.forEach((b) => {
-    const lookupResult = utils.getModifierSum(utils.filterBaseModifiers(data, "bonus", b.ddbSubType), character);
-    const lookupMatch = diceFormula.test(lookupResult);
+    const lookupResult = utils.getModifierSum(utils.filterBaseModifiers(data, 'bonus', b.ddbSubType), character)
+    const lookupMatch = diceFormula.test(lookupResult)
 
     // if a match then a dice string
     if (lookupMatch) {
-      lookupResults[b.fvttType].diceString += lookupResult === "" ? lookupResult : " + " + lookupResult;
+      lookupResults[b.fvttType].diceString += lookupResult === '' ? lookupResult : ' + ' + lookupResult
     } else {
-      lookupResults[b.fvttType].sum += lookupResult;
+      lookupResults[b.fvttType].sum += lookupResult
     }
-  });
+  })
 
   // loop through outputs from lookups and build a response
-  ["attack", "damage"].forEach((fvttType) => {
-    if (lookupResults[fvttType].diceString === "") {
+  ;['attack', 'damage'].forEach((fvttType) => {
+    if (lookupResults[fvttType].diceString === '') {
       if (lookupResults[fvttType].sum !== 0) {
-        result[fvttType] = lookupResults[fvttType].sum;
+        result[fvttType] = lookupResults[fvttType].sum
       }
     } else {
-      result[fvttType] = lookupResults[fvttType].diceString;
+      result[fvttType] = lookupResults[fvttType].diceString
       if (lookupResults[fvttType].sum !== 0) {
-        result[fvttType] += " + " + lookupResults[fvttType].sum;
+        result[fvttType] += ' + ' + lookupResults[fvttType].sum
       }
     }
-  });
+  })
 
-  return result;
+  return result
 }
 
 /**
@@ -74,11 +74,11 @@ export function getGlobalBonusAttackModifiers(lookupTable, data, character) {
 export function getBonusSpellAttacks(data, character, type) {
   // I haven't found any matching global spell damage boosting mods in ddb
   const bonusLookups = [
-    { fvttType: "attack", ddbSubType: "spell-attacks" },
-    { fvttType: "attack", ddbSubType: `${type}-spell-attacks` },
-  ];
+    { fvttType: 'attack', ddbSubType: 'spell-attacks' },
+    { fvttType: 'attack', ddbSubType: `${type}-spell-attacks` },
+  ]
 
-  return getGlobalBonusAttackModifiers(bonusLookups, data, character);
+  return getGlobalBonusAttackModifiers(bonusLookups, data, character)
 }
 
 /**
@@ -98,12 +98,12 @@ export function getBonusWeaponAttacks(data, character, type) {
   // type specific. The only class one I know of is the Paladin Improved Smite
   // which will be handled in the weapon import later.
   const bonusLookups = [
-    { fvttType: "attack", ddbSubType: `${type}-attacks` },
-    { fvttType: "attack", ddbSubType: "weapon-attacks" },
-    { fvttType: "attack", ddbSubType: `${type}-weapon-attacks` },
-  ];
+    { fvttType: 'attack', ddbSubType: `${type}-attacks` },
+    { fvttType: 'attack', ddbSubType: 'weapon-attacks' },
+    { fvttType: 'attack', ddbSubType: `${type}-weapon-attacks` },
+  ]
 
-  return getGlobalBonusAttackModifiers(bonusLookups, data, character);
+  return getGlobalBonusAttackModifiers(bonusLookups, data, character)
 }
 
 /**
@@ -118,27 +118,27 @@ export function getBonusWeaponAttacks(data, character, type) {
  * @param {*} character
  */
 export function getBonusAbilities(data, character) {
-  let result = {};
+  let result = {}
   const bonusLookup = [
-    { fvttType: "check", ddbSubType: "ability-checks" },
-    { fvttType: "save", ddbSubType: "saving-throws" },
-    { fvttType: "skill", ddbSubType: "skill-checks" },
-  ];
+    { fvttType: 'check', ddbSubType: 'ability-checks' },
+    { fvttType: 'save', ddbSubType: 'saving-throws' },
+    { fvttType: 'skill', ddbSubType: 'skill-checks' },
+  ]
 
   bonusLookup.forEach((b) => {
-    const bonus = utils.getModifierSum(utils.filterBaseModifiers(data, "bonus", b.ddbSubType), character);
-    result[b.fvttType] = bonus === 0 ? "" : bonus;
-  });
-  return result;
+    const bonus = utils.getModifierSum(utils.filterBaseModifiers(data, 'bonus', b.ddbSubType), character)
+    result[b.fvttType] = bonus === 0 ? '' : bonus
+  })
+  return result
 }
 
 export function getBonusSpellDC(data, character) {
-  let result = {};
-  const bonusLookup = [{ fvttType: "dc", ddbSubType: "spell-save-dc" }];
+  let result = {}
+  const bonusLookup = [{ fvttType: 'dc', ddbSubType: 'spell-save-dc' }]
 
   bonusLookup.forEach((b) => {
-    result[b.fvttType] = utils.getModifierSum(utils.filterBaseModifiers(data, "bonus", b.ddbSubType), character);
-  });
+    result[b.fvttType] = utils.getModifierSum(utils.filterBaseModifiers(data, 'bonus', b.ddbSubType), character)
+  })
 
-  return result;
+  return result
 }
