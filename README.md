@@ -52,6 +52,6 @@ WIP, but use MIT. Be nice, don't be an asshole.
 
 ### Toolchain
 
-- Volta ([link](https://volta.sh)])
+- Volta ([link](https://volta.sh))
 - Node (managed by volta)
 - NPM (managed by volta)
