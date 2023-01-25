@@ -254,7 +254,7 @@
     "require-jsdoc": "off",
     "require-unicode-regexp": "off",
     "rest-spread-spacing": "error",
-    "semi": "error",
+    "semi": "off",
     "semi-spacing": [
       "error",
       {
@@ -262,7 +262,7 @@
         "before": false
       }
     ],
-    "semi-style": ["error", "last"],
+    "semi-style": "off",
     "sort-keys": "off",
     "sort-vars": "off",
     "space-before-blocks": "error",
